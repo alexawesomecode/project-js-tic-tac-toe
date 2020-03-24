@@ -177,10 +177,6 @@ const checkPlay = (() => {
     return { clickListen, getInputs };
 })();
 
-// checkPlay.clickListen();
-// checkPlay.getInputs();
 
-const reStartGame = selectQuery('button.restart-game');
-// reStartGame.addEventListener('click', game.reStart);
 
 export default game;
