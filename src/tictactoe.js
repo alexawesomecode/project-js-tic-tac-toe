@@ -74,8 +74,10 @@ const game = (() => {
         return 'Player 2 Wins';
       }
       if (board.indexOf('...') === -1 && board.indexOf(':(') === -1) {
-        const [player1, player2] = players;
-        if (nocall !== false) setTie(player1, player2);
+        if (nocall !== false) {
+          const [player1, player2] = players;
+          setTie(player1, player2);
+        }
         return 'There has been a tie';
       }
     }
