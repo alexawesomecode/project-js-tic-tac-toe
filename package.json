@@ -4,7 +4,7 @@
   "description": "[![Contributors][contributors-shield]][contributors-url]\r [![Forks][forks-shield]][forks-url]\r [![Stargazers][stars-shield]][stars-url]\r [![Issues][issues-shield]][issues-url]\r [![MIT License][license-shield]][license-url]",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx jest --watch"
   },
   "repository": {
     "type": "git",
@@ -18,12 +18,14 @@
   },
   "homepage": "https://github.com/alexawesomecode/project-js-tic-tac-toe#readme",
   "devDependencies": {
+    "@babel/preset-env": "^7.9.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.1"
   },
   "dependencies": {
-    "eslint-auto-fix": "^1.0.1"
+    "eslint-auto-fix": "^1.0.1",
+    "jest": "^25.1.0"
   }
 }
