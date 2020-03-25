@@ -38,7 +38,11 @@ This is a Tic Tac Toe Game App where you play against an opponent takimg turns o
 
 # Validations
 
--ESLINT
+- ESLINT
+
+# Test
+
+- Jest
 
 # Get Started
 
