@@ -15,7 +15,7 @@ const game = (() => {
     players = [player1, player2];
   }
 
-  const checkBox = position => {
+  const checkBox = (position, board) => {
     const boardPos = board[position];
     if (boardPos !== 'X' && boardPos !== 'O') {
       return true;
@@ -52,7 +52,7 @@ const game = (() => {
     ).innerHTML = `No Winner:  ITS A TIE!!! <br/> Thanks for playing ${player1} and ${player2}`;
   }
 
-  const checkWin = () => {
+  const checkWin = (board, nocall = false) => {
     const patterns = [
       [0, 1, 2],
       [3, 4, 5],
@@ -64,23 +64,28 @@ const game = (() => {
       [0, 4, 8],
     ];
 
-    return patterns.map(p => {
+    for (const p of patterns) {
       if (board[p[0]] === 'X' && board[p[1]] === 'X' && board[p[2]] === 'X') {
-        return setWinner(p, 'Player1');
+        if (nocall !== false) setWinner(p, 'Player1');
+        return 'Player 1 Wins';
       }
       if (board[p[0]] === 'O' && board[p[1]] === 'O' && board[p[2]] === 'O') {
-        return setWinner(p, 'Player2');
+        if (nocall !== false) setWinner(p, 'Player2');
+        return 'Player 2 Wins';
       }
       if (board.indexOf('...') === -1 && board.indexOf(':(') === -1) {
-        const [player1, player2] = players;
-        return setTie(player1, player2);
+        if (nocall !== false) {
+          const [player1, player2] = players;
+          setTie(player1, player2);
+        }
+        return 'There has been a tie';
       }
-      return null;
-    });
+    }
+    return '';
   };
 
-  const placeMark = position => {
-    if (checkBox(position)) {
+  const placeMark = (position, board, nocall = false) => {
+    if (checkBox(position, board)) {
       const countX = board.filter(x => x === 'X').length;
       const countO = board.filter(y => y === 'O').length;
       if (countX > countO) {
@@ -89,14 +94,9 @@ const game = (() => {
         board[position] = 'X';
       }
     }
-    display();
-    checkWin();
-  };
-
-  const gameLogic = (mark, position) => {
-    if (checkBox(position)) {
-      placeMark(mark, position);
+    if (nocall !== false) {
       display();
+      checkWin(board, true);
     }
   };
 
@@ -108,7 +108,6 @@ const game = (() => {
     display,
     checkBox,
     placeMark,
-    gameLogic,
     checkWin,
     setWinner,
     storePlayers,
@@ -116,71 +115,5 @@ const game = (() => {
   };
 })();
 
-const checkPlay = (() => {
-  const getInputs = () => {
-    const selectQuery = query => document.querySelector(query);
-    const finalSubmitBut = selectQuery("input[type='submit']");
-    const player1Submit = selectQuery('.play1sub');
-    const form = selectQuery('form');
-    form.onsubmit = e => e.preventDefault();
-    const player1Name = selectQuery('#player1');
-    const player2Name = selectQuery('#player2');
 
-    const checkVal = inputval => {
-      if (inputval.length > 0) {
-        return true;
-      }
-      return false;
-    };
-    const showRules = () => {
-      selectQuery('.rules').setAttribute(
-        'style',
-        'height: 300px; width: 350px; padding: 10px',
-      );
-    };
-
-    player1Submit.onclick = e => {
-      const parent = e.target.parentNode;
-      if (checkVal(player1Name.value)) {
-        selectQuery('.player2').style.display = 'block';
-        parent.classList.add('slide-out');
-      } else {
-        parent.classList.add('vibrate');
-        parent.onanimationend = e => e.target.classList.remove('vibrate');
-      }
-    };
-
-    finalSubmitBut.onclick = e => {
-      const { parentNode } = e.target;
-      if (checkVal(player2Name.value)) {
-        game.storePlayers(player1Name.value, player2Name.value);
-        parentNode.classList.add('slide-out');
-        form.style.display = 'none';
-        showRules();
-        selectQuery('.info-name').style.display = 'none';
-        selectQuery('.board-wrapper').style.visibility = 'visible';
-        selectQuery('.rules-board-wrap').classList.add('show-board');
-        selectQuery('.gameboard').style.transform = 'translate3d(0px, 0, 0px)';
-      } else {
-        parentNode.classList.add('vibrate');
-        parentNode.onanimationend = e => e.target.classList.remove('vibrate');
-      }
-    };
-  };
-
-  const clickListen = () => {
-    cells.forEach((cell, ind) => {
-      cell.onclick = () => {
-        game.placeMark(ind);
-      };
-    });
-  };
-
-  return { clickListen, getInputs };
-})();
-
-checkPlay.clickListen();
-checkPlay.getInputs();
-
-const reStartGame = selectQuery('button.restart-game');
-reStartGame.addEventListener('click', game.reStart);
+export default game;
